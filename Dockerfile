@@ -23,6 +23,9 @@ WORKDIR /root/ros_ws
 # Copy the entire project directory
 COPY . /root/ros_ws/
 
+# Set Python 3 as the default Python version
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+
 # Source ROS setup.bash every time a new shell is started
 RUN echo "source /opt/ros/melodic/setup.bash" >> /root/.bashrc
 
