@@ -14,10 +14,10 @@ turtlesim:
 	docker run -it --rm --net=host ros-melodic-vnc bash -c "tightvncserver :1 -geometry 1280x800 -depth 24 && roscore & sleep 5 && rosrun turtlesim turtlesim_node"
 
 server-turtle:
-	docker run --rm --net=host ros-melodic-vnc bash -c "tightvncserver :1 -geometry 1280x800 -depth 24 && python /root/ros_ws/server.py turtle"
+	docker run --rm --net=host ros-melodic-vnc bash -c "tightvncserver :1 -geometry 1280x800 -depth 24 && python3 /root/ros_ws/server.py turtle"
 
 server-real:
-	docker run --rm --net=host ros-melodic-vnc bash -c "tightvncserver :1 -geometry 1280x800 -depth 24 && python /root/ros_ws/server.py real"
+	docker run --rm --net=host ros-melodic-vnc bash -c "tightvncserver :1 -geometry 1280x800 -depth 24 && python3 /root/ros_ws/server.py real"
 
 http-server:
 	docker run --rm --net=host ros-melodic-vnc bash -c "tightvncserver :1 -geometry 1280x800 -depth 24 && python3 -m http.server 8000 --directory /root/ros_ws/"
