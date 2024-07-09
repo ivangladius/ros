@@ -9,7 +9,7 @@ ENV VNC_PASSWORD=gutenmorgenabend123
 # Update the package list and install required dependencies
 RUN apt-get update -y && \
     apt-get install -y \
-    x11-apps tightvncserver xfce4 && \
+    x11-apps tightvncserver xfce4 python3-venv python3-pip && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set up the environment for running graphical applications
@@ -20,9 +20,8 @@ ENV QT_X11_NO_MITSHM=1
 RUN mkdir -p /root/ros_ws/src
 WORKDIR /root/ros_ws
 
-# Source ROS setup.bash and build workspace (uncomment if you have a workspace)
-# COPY . /root/ros_ws/
-# RUN /bin/bash -c "source /opt/ros/melodic/setup.bash && catkin_make"
+# Copy the entire project directory
+COPY . /root/ros_ws/
 
 # Source ROS setup.bash every time a new shell is started
 RUN echo "source /opt/ros/melodic/setup.bash" >> /root/.bashrc
@@ -38,6 +37,16 @@ RUN mkdir -p /root/.vnc && \
 # Expose the VNC port
 EXPOSE 5901
 
-# Entry point to start VNC server
-CMD ["bash", "-c", "tightvncserver :1 -geometry 1280x800 -depth 24 && bash"]
+# Create and activate a Python virtual environment, install requirements
+RUN python3 -m venv /root/ros_ws/venv && \
+    /root/ros_ws/venv/bin/pip install -r /root/ros_ws/requirements.txt
+
+# Copy the entrypoint script
+COPY entrypoint.sh /root/ros_ws/
+
+# Make the entrypoint script executable
+RUN chmod +x /root/ros_ws/entrypoint.sh
+
+# Entry point to start VNC server and the server script
+CMD ["/root/ros_ws/entrypoint.sh"]
 
