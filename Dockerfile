@@ -9,7 +9,7 @@ ENV VNC_PASSWORD=gutenmorgenabend123
 # Update the package list and install required dependencies
 RUN apt-get update -y && \
     apt-get install -y \
-    x11-apps tightvncserver xfce4 python3-venv python3-pip && \
+    x11-apps tightvncserver xfce4 python3-venv python3-pip python3-rosdep python3-rosinstall python3-rospkg python3-catkin-pkg python3-yaml && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set up the environment for running graphical applications
@@ -39,6 +39,9 @@ RUN mkdir -p /root/.vnc && \
 
 # Expose the VNC port
 EXPOSE 5901
+
+# Initialize rosdep
+RUN rosdep init && rosdep update
 
 # Create and activate a Python virtual environment, install requirements
 RUN python3 -m venv /root/ros_ws/venv && \
